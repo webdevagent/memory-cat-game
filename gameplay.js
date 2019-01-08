@@ -38,8 +38,8 @@ function startGame() {
   Shuffle(gameCards);
   gameCards.forEach(num => {
     galleryContainer.appendChild(num)
-    num.firstChild.classList.toggle('right', false);
-    num.firstChild.classList.toggle('transformCard', false);
+    num.firstChild.classList.remove('right');
+    num.firstChild.classList.remove('transformCard');
     num.firstChild.classList.add('start');
     checkCard = null;
     canOpenCard = true;
