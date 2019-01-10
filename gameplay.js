@@ -56,7 +56,7 @@ function createBlock(imgsrc) {
 };
 
 function cardCompare({target}) {
-  let PlayCardClass = target.className;
+  let playCardClass = target.className;
   let targetInnerCard = galleryContainer.querySelector(`.flip-box-inner[data-order='${target.dataset.order}']`);
   const sInterval = 1000;
   const lInterval = 2000;
@@ -74,7 +74,7 @@ function cardCompare({target}) {
       }
     }, time);
   }
-  if (PlayCardClass != 'flip-box' && PlayCardClass != 'catGallery' && canOpenCard && PlayCardClass == 'flip-box-front') {
+  if (playCardClass != 'flip-box' && playCardClass != 'catGallery' && canOpenCard && playCardClass == 'flip-box-front') {
     if (checkCard == null) {
       targetInnerCard.classList.toggle('transform-card');
       checkCard = target;
