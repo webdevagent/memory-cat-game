@@ -12,12 +12,13 @@ const catGallery = [
   'cats/sweet-cat.jpeg',
 ];
 
-const gameCards = Array(12).fill(0);
+const gameCards = Array(catGallery.length*2).fill(0);
 gameCards.forEach((num, i) => gameCards[i] = createBlock(catGallery[i % catGallery.length]));
 gameCards.forEach((num, i) => {
   num.querySelector('.flip-box-inner').dataset.order = i;
-  num.querySelector('.flip-box-front').dataset.order = i;
-  num.querySelector('.flip-box-front').dataset.compareNum = i % catGallery.length;
+  let frontCardData=num.querySelector('.flip-box-front').dataset;
+  frontCardData.order = i;
+  frontCardData.compareNum = i % catGallery.length;
 });
 galleryContainer.addEventListener('click', cardCompare)
 restartButton.addEventListener('click', startGame);
@@ -26,9 +27,10 @@ startGame();
 function startGame() {
   gameCards.sort(() => 0.5 - Math.random());
   gameCards.forEach(num => {
-    galleryContainer.appendChild(num)
-    num.querySelector('.flip-box-inner ').classList.remove('right', 'transform-card');
-    num.querySelector('.flip-box-inner ').classList.add('start');
+    galleryContainer.appendChild(num);
+    let innerCard=num.querySelector('.flip-box-inner');
+    innerCard.classList.remove('right', 'transform-card');
+    innerCard.classList.add('start');
     checkCard = null;
     canOpenCard = true;
   });
