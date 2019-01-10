@@ -50,8 +50,7 @@ function createBlock(imgsrc) {
   let catImage = createCard('img');
   catImage.src = imgsrc;
   flipBoxBack.appendChild(catImage);
-  flipBoxInner.appendChild(flipBoxFront);
-  flipBoxInner.appendChild(flipBoxBack);
+  [flipBoxFront,flipBoxBack].forEach(num=>flipBoxInner.appendChild(num));
   flipBox.appendChild(flipBoxInner);
   return flipBox;
 };
