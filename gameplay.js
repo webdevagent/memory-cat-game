@@ -61,14 +61,11 @@ function cardCompare({target}) {
   const sInterval = 1000;
   const lInterval = 2000;
 
-  function afterCompareAction(fcard, scard, className, time, action) {
+  function afterCompareAction(fcard, scard, className, time,compared) {
     setTimeout(() => {
-      if (action == 'add') {
-        fcard.classList.add(className);
-        scard.classList.add(className);
-      } else {
         fcard.classList.toggle(className);
         scard.classList.toggle(className);
+        if(compared){
         checkCard = null;
         canOpenCard = true;
       }
@@ -83,13 +80,13 @@ function cardCompare({target}) {
     if (target.dataset.compareNum != checkCard.dataset.compareNum) {
       targetInnerCard.classList.toggle('transform-card');
       canOpenCard = false;
-      afterCompareAction(targetInnerCard, checkCardInnerCard, 'transform-card', sInterval);
+      afterCompareAction(targetInnerCard, checkCardInnerCard, 'transform-card', sInterval,true);
     }
     if (target.dataset.compareNum == checkCard.dataset.compareNum && target != checkCard) {
       targetInnerCard.classList.toggle('transform-card');
       canOpenCard = false;
-      afterCompareAction(targetInnerCard, checkCardInnerCard, 'right', sInterval, 'add');
-      afterCompareAction(targetInnerCard, checkCardInnerCard, 'start', lInterval);
+      afterCompareAction(targetInnerCard, checkCardInnerCard, 'right', sInterval);
+      afterCompareAction(targetInnerCard, checkCardInnerCard, 'start', lInterval,true);
     }
   }
 };
