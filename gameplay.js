@@ -1,8 +1,8 @@
+//Initialize and define basic game variables and objects
 const restartButton = document.querySelector('.restart');
 const galleryContainer = document.querySelector('.catGallery');
 let checkCard = null;
 let canOpenCard = true;
-let checkCardInnerCard;
 const catGallery = [
   'cats/attention-cat.jpeg',
   'cats/hungry-cat.jpeg',
@@ -12,35 +12,48 @@ const catGallery = [
   'cats/sweet-cat.jpeg',
 ];
 
-const gameCards = Array(12).fill(0);
-gameCards.forEach((num, i) => gameCards[i] = createBlock(catGallery[i % 6]));
-gameCards.forEach((num, i) => {
-  num.querySelector('.flip-box-inner').dataset.order = i;
-  num.querySelector('.flip-box-front').dataset.order = i;
-  num.querySelector('.flip-box-front').dataset.compareNum = i % 6;
-});
-galleryContainer.addEventListener('click', cardCompare)
+const gameCards = [];
+
+//fill ampty Array by game-blocks
+for (let i = 0; i < 12; i++) {
+  gameCards[i] = createBlock(catGallery[i % 6]);
+};
+
+//add addEventListeners to gameBlocks and restartButton
+gameCards.forEach(num => num.addEventListener('click', cardCompare));
 restartButton.addEventListener('click', startGame);
+
+//call function startGame() to  begin playing
 startGame();
 
+/*Initialize and define basic game methods
+Initialize and define function that randomize income Array*/
+function Shuffle(o) {
+  for (var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+  return o;
+};
+
+//Game begining function defining
 function startGame() {
-  gameCards.sort(() => 0.5 - Math.random());
+  Shuffle(gameCards);
   gameCards.forEach(num => {
     galleryContainer.appendChild(num)
-    num.querySelector('.flip-box-inner ').classList.remove('right', 'transform-card');
-    num.querySelector('.flip-box-inner ').classList.add('start');
+    num.firstChild.classList.remove('right');
+    num.firstChild.classList.remove('transformCard');
+    num.firstChild.classList.add('start');
     checkCard = null;
     canOpenCard = true;
-    console.log("restart");
   });
 };
 
+//Html element creation function definition
 function createCard(element, className) {
   let card = document.createElement(element);
   card.classList.add(className);
   return card;
 };
 
+//Initialize and define game block creation function
 function createBlock(imgsrc) {
   let flipBox = createCard('div', 'flip-box');
   let flipBoxInner = createCard('div', 'flip-box-inner');
@@ -55,41 +68,39 @@ function createBlock(imgsrc) {
   return flipBox;
 };
 
+/*Initialize and define cardCompare function, that compare cards and run
+ internal method that based on the comparison result*/
 function cardCompare({target}) {
-  let PlayCardClass = target.className;
-  let targetInnerCard = galleryContainer.querySelector(`.flip-box-inner[data-order='${target.dataset.order}']`);
-  const sInterval = 1000;
-  const lInterval = 2000;
-
-  function afterCompareAction(fcard, scard, className, time, action) {
+  function afterCompareAction(className, time, action) {
     setTimeout(() => {
       if (action == 'add') {
-        fcard.classList.add(className);
-        scard.classList.add(className);
+        checkCard.classList.add(className);
+        target.parentNode.classList.add(className);
       } else {
-        fcard.classList.toggle(className);
-        scard.classList.toggle(className);
+        checkCard.classList.toggle(className);
+        target.parentNode.classList.toggle(className);
         checkCard = null;
+        checkCardImg = null;
         canOpenCard = true;
       }
     }, time);
-  }
-  if (PlayCardClass != 'flip-box' && PlayCardClass != 'catGallery' && canOpenCard && PlayCardClass == 'flip-box-front') {
+  };
+  let innerImg = target.parentNode.querySelector('img');
+  if (canOpenCard) {
     if (checkCard == null) {
-      targetInnerCard.classList.toggle('transform-card');
-      checkCard = target;
-      checkCardInnerCard = galleryContainer.querySelector(`.flip-box-inner[data-order='${checkCard.dataset.order}']`);
-    }
-    if (target.dataset.compareNum != checkCard.dataset.compareNum) {
-      targetInnerCard.classList.toggle('transform-card');
-      canOpenCard = false;
-      afterCompareAction(targetInnerCard, checkCardInnerCard, 'transform-card', 1000);
-    }
-    if (target.dataset.compareNum == checkCard.dataset.compareNum && target != checkCard) {
-      targetInnerCard.classList.toggle('transform-card');
-      canOpenCard = false;
-      afterCompareAction(targetInnerCard, checkCardInnerCard, 'right', 1000, 'add');
-      afterCompareAction(targetInnerCard, checkCardInnerCard, 'start', 2000);
+      target.parentNode.classList.add('transformCard');
+      checkCard = target.parentNode;
+      checkCardImg = innerImg;
+    } else {
+      target.parentNode.classList.add('transformCard');
+      if (checkCardImg.src == innerImg.src && checkCardImg != innerImg) {
+        canOpenCard = false;
+        afterCompareAction('right', 1000, 'add');
+        afterCompareAction('start', 2000);
+      } else if (checkCardImg != innerImg) {
+        canOpenCard = false;
+        afterCompareAction('transformCard', 1000)
+      }
     }
   }
-};
+}
