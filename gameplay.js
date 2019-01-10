@@ -13,11 +13,11 @@ const catGallery = [
 ];
 
 const gameCards = Array(12).fill(0);
-gameCards.forEach((num, i) => gameCards[i] = createBlock(catGallery[i % 6]));
+gameCards.forEach((num, i) => gameCards[i] = createBlock(catGallery[i % catGallery.length]));
 gameCards.forEach((num, i) => {
   num.querySelector('.flip-box-inner').dataset.order = i;
   num.querySelector('.flip-box-front').dataset.order = i;
-  num.querySelector('.flip-box-front').dataset.compareNum = i % 6;
+  num.querySelector('.flip-box-front').dataset.compareNum = i % catGallery.length;
 });
 galleryContainer.addEventListener('click', cardCompare)
 restartButton.addEventListener('click', startGame);
@@ -82,13 +82,13 @@ function cardCompare({target}) {
     if (target.dataset.compareNum != checkCard.dataset.compareNum) {
       targetInnerCard.classList.toggle('transform-card');
       canOpenCard = false;
-      afterCompareAction(targetInnerCard, checkCardInnerCard, 'transform-card', 1000);
+      afterCompareAction(targetInnerCard, checkCardInnerCard, 'transform-card', sInterval);
     }
     if (target.dataset.compareNum == checkCard.dataset.compareNum && target != checkCard) {
       targetInnerCard.classList.toggle('transform-card');
       canOpenCard = false;
-      afterCompareAction(targetInnerCard, checkCardInnerCard, 'right', 1000, 'add');
-      afterCompareAction(targetInnerCard, checkCardInnerCard, 'start', 2000);
+      afterCompareAction(targetInnerCard, checkCardInnerCard, 'right', sInterval, 'add');
+      afterCompareAction(targetInnerCard, checkCardInnerCard, 'start', lInterval);
     }
   }
 };
